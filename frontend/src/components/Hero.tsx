@@ -1,7 +1,8 @@
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#4C1D95] to-[#2E1065] px-8 pt-16 pb-28">
+    <section id="hero" className="relative overflow-hidden bg-gradient-to-b from-[#4C1D95] to-[#2E1065] px-8 pt-16 pb-28">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-16 items-center">
+        {/* Texto */}
         <div className="text-left">
           <span className="inline-block font-mono text-xs tracking-widest uppercase text-[#C6F135] mb-5">
             Economia circular · Campus Unifor
@@ -37,7 +38,7 @@ export function Hero() {
               Livros
             </span>
             <p className="font-bold text-[#1C0F33] text-sm mt-1">Cálculo I — Stewart</p>
-            <p className="text-xs text-[#6B5B8C] mt-1">6ª edição, poucas marcações</p>
+            <p className="text-xs text-gray-500 mt-1">6ª edição, poucas marcações</p>
             <p className="mt-3 text-sm font-semibold text-[#4C1D95]">R$ 45,00</p>
           </div>
  
@@ -46,7 +47,7 @@ export function Hero() {
               Saúde
             </span>
             <p className="font-bold text-[#1C0F33] text-sm mt-1">Jaleco branco M</p>
-            <p className="text-xs text-[#6B5B8C] mt-1">Usado por 1 semestre</p>
+            <p className="text-xs text-gray-500 mt-1">Usado por 1 semestre</p>
             <span className="mt-3 inline-block text-xs font-semibold text-[#1C0F33] bg-[#C6F135] px-2 py-0.5 rounded-full">
               Doação
             </span>
@@ -57,7 +58,7 @@ export function Hero() {
               Engenharia
             </span>
             <p className="font-bold text-[#1C0F33] text-sm mt-1">HP 12C emulada</p>
-            <p className="text-xs text-[#6B5B8C] mt-1">Científica, funciona 100%</p>
+            <p className="text-xs text-gray-500 mt-1">Científica, funciona 100%</p>
             <p className="mt-3 text-sm font-semibold text-[#4C1D95]">R$ 30,00</p>
           </div>
         </div>

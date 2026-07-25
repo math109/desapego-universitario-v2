@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
  
-const LINKS = [
-  { href: "#como-funciona", label: "Como funciona" },
-  { href: "#categorias", label: "Categorias" },
-  { href: "#vitrine", label: "Ver anúncios" },
+const LINKS_BASE = [
+  { href: "#hero", label: "Como funciona" },
+  { href: "#vitrine", label: "Categorias" },
 ];
  
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuAberto, setMenuAberto] = useState(false);
-
+ 
   const { usuario, logout } = useAuth();
  
   useEffect(() => {
@@ -45,7 +45,7 @@ export function Header() {
         </a>
  
         <nav className="hidden md:flex gap-1">
-          {LINKS.map((link) => (
+          {LINKS_BASE.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -55,24 +55,42 @@ export function Header() {
               <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-[#C6F135] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
             </a>
           ))}
+ 
+          {usuario ? (
+            <Link
+              to="/meus-anuncios"
+              className="relative px-3 py-2 text-sm text-[#A78BFA] hover:text-[#F7F5FB] transition-colors duration-200 group"
+            >
+              Meus anúncios
+              <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-[#C6F135] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
+            </Link>
+          ) : (
+            <a
+              href="#vitrine"
+              className="relative px-3 py-2 text-sm text-[#A78BFA] hover:text-[#F7F5FB] transition-colors duration-200 group"
+            >
+              Ver anúncios
+              <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-[#C6F135] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
+            </a>
+          )}
         </nav>
  
         <div className="hidden md:flex items-center gap-4">
           {usuario ? (
-        <button onClick={logout} className="text-sm text-[#F7F5FB] opacity-85 hover:opacity-100">
-          Sair
-        </button>
-        ) : (
-        <a href="/login" className="text-sm text-[#F7F5FB] opacity-85 hover:opacity-100">
-          Entrar
-        </a>
-        )}
-          <a
-            href="/anunciar"
+            <button onClick={logout} className="text-sm text-[#F7F5FB] opacity-85 hover:opacity-100">
+              Sair
+            </button>
+          ) : (
+            <Link to="/login" className="text-sm text-[#F7F5FB] opacity-85 hover:opacity-100">
+              Entrar
+            </Link>
+          )}
+          <Link
+            to="/anunciar"
             className="rounded-full bg-[#C6F135] px-5 py-2 text-sm font-semibold text-[#1C0F33] hover:-translate-y-0.5 hover:shadow-md hover:shadow-[#C6F135]/30 transition-all duration-200"
           >
             Anunciar item
-          </a>
+          </Link>
         </div>
  
         <button
@@ -92,7 +110,7 @@ export function Header() {
         }`}
       >
         <div className="flex flex-col px-6 py-4 gap-3">
-          {LINKS.map((link) => (
+          {LINKS_BASE.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -102,15 +120,52 @@ export function Header() {
               {link.label}
             </a>
           ))}
-          <a href="/entrar" className="text-[#F7F5FB] text-sm pt-2 border-t border-white/10">
-            Entrar
-          </a>
-          <a
-            href="/anunciar"
+ 
+          {usuario ? (
+            <Link
+              to="/meus-anuncios"
+              onClick={() => setMenuAberto(false)}
+              className="text-[#A78BFA] hover:text-[#F7F5FB] text-sm"
+            >
+              Meus anúncios
+            </Link>
+          ) : (
+            <a
+              href="#vitrine"
+              onClick={() => setMenuAberto(false)}
+              className="text-[#A78BFA] hover:text-[#F7F5FB] text-sm"
+            >
+              Ver anúncios
+            </a>
+          )}
+ 
+          {usuario ? (
+            <button
+              onClick={() => {
+                logout();
+                setMenuAberto(false);
+              }}
+              className="text-left text-[#F7F5FB] text-sm pt-2 border-t border-white/10"
+            >
+              Sair
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setMenuAberto(false)}
+              className="text-[#F7F5FB] text-sm pt-2 border-t border-white/10"
+            >
+              Entrar
+            </Link>
+          )}
+ 
+          <Link
+            to="/anunciar"
+            onClick={() => setMenuAberto(false)}
             className="rounded-full bg-[#C6F135] px-5 py-2.5 text-sm font-semibold text-[#1C0F33] text-center mt-1"
           >
             Anunciar item
-          </a>
+          </Link>
         </div>
       </div>
     </header>
