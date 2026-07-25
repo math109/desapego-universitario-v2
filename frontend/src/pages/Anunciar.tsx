@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
  
 const CATEGORIAS = ["Livros", "Engenharia", "Computação"];
-// em produção, defina VITE_API_URL no .env (ex: VITE_API_URL=https://sua-api.onrender.com)
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3333";
+const API_URL = import.meta.env.VITE_API_URL;
  
 const inputClasses =
   "w-full border border-[#E5E0F0] rounded-lg px-4 py-2.5 text-[#1C0F33] placeholder:text-[#A79BC2] outline-none focus:border-[#4C1D95] focus:ring-2 focus:ring-[#4C1D95]/20 transition-colors";

@@ -11,8 +11,7 @@ interface Anuncio {
  
 const CATEGORIAS = ["Todos", "Livros", "Engenharia", "Computação"];
  
-// em produção, defina VITE_API_URL no .env (ex: VITE_API_URL=https://sua-api.onrender.com)
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3333";
+const API_URL = import.meta.env.VITE_API_URL;
  
 export function Vitrine() {
   const [anuncios, setAnuncios] = useState<Anuncio[]>([]);
