@@ -17,7 +17,7 @@ export function Stats() {
     <section className="px-8 -mt-16 relative z-10">
       <div className="max-w-4xl mx-auto bg-[#1C0F33] rounded-2xl shadow-2xl px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-8">
         <div className="text-center">
-          <p className="text-3xl font-bold text-[#C6F135]">120+</p>
+          <p className="text-3xl font-bold text-[#C6F135]">4+</p>
           <p className="mt-1 font-mono text-xs uppercase tracking-widest text-[#A78BFA]">
             itens desapegados
           </p>
@@ -35,7 +35,7 @@ export function Stats() {
         <LoopDivider />
  
         <div className="text-center">
-          <p className="text-3xl font-bold text-[#C6F135]">3</p>
+          <p className="text-3xl font-bold text-[#C6F135]">7</p>
           <p className="mt-1 font-mono text-xs uppercase tracking-widest text-[#A78BFA]">
             categorias disponíveis
           </p>
