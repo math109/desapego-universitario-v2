@@ -35,7 +35,7 @@ export function Stats() {
         <LoopDivider />
  
         <div className="text-center">
-          <p className="text-3xl font-bold text-[#C6F135]">6</p>
+          <p className="text-3xl font-bold text-[#C6F135]">3</p>
           <p className="mt-1 font-mono text-xs uppercase tracking-widest text-[#A78BFA]">
             categorias disponíveis
           </p>

@@ -9,7 +9,7 @@ export function Footer() {
  
       <div className="flex items-center justify-center gap-4 mb-3">
         <a
-          href="https://github.com/math109/desapego-universitario"
+          href="https://github.com/math109/desapego-universitario-v2"
           target="_blank"
           rel="noopener noreferrer"
           className="text-[#A78BFA] text-sm hover:text-[#F7F5FB] transition-colors"
