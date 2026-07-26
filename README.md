@@ -1,0 +1,247 @@
+# Desapego Universitário
+
+Marketplace de economia circular para o campus da UNIFOR. A plataforma permite que estudantes cadastrem itens para doação ou venda (livros, calculadoras, jalecos, componentes eletrônicos, etc.), facilitando o acesso a materiais para quem está ingressando na universidade.
+
+Projeto desenvolvido como desafio técnico do processo seletivo de estágio Full-Stack do Laboratório de Inovação Vortex (UNIFOR).
+
+🔗 **Aplicação em produção:** https://desapego-universitario-v2.vercel.app
+🔗 **API em produção:** https://desapego-universitario-cksr.onrender.com
+
+> O backend está hospedado no plano gratuito do Render, que hiberna após um período de inatividade. A primeira requisição depois de um tempo sem uso pode levar de 30 a 60 segundos para responder.
+
+---
+
+## Tecnologias utilizadas
+
+### Backend
+- **Node.js** + **TypeScript**
+- **Express** — framework de rotas da API REST
+- **Prisma ORM (v7)** — camada de acesso ao banco de dados
+- **PostgreSQL** (hospedado no **Supabase**)
+- **JWT** (jsonwebtoken) + **bcryptjs** — autenticação e criptografia de senhas
+- **Zod** — validação de dados de entrada
+- **tsx** — execução do TypeScript em desenvolvimento
+
+### Frontend
+- **React** + **TypeScript**
+- **Vite** — build tool
+- **Tailwind CSS v4** — estilização
+- **React Router** — navegação entre páginas
+- **Context API** — gerenciamento do estado de autenticação
+- **lucide-react** — ícones
+- **PWA** (Progressive Web App) — manifest + Service Worker com cache offline
+
+### Infraestrutura
+- **Render** — deploy do backend
+- **Vercel** — deploy do frontend
+- **Supabase** — banco de dados PostgreSQL
+
+---
+
+## Estrutura do projeto
+
+```
+desapego-universitario-v2/
+├── backend/
+│   ├── prisma/schema.prisma      # modelagem das tabelas User e Anuncio
+│   └── src/
+│       ├── server.ts              # ponto de entrada, configuração do Express
+│       ├── lib/prisma.ts          # instância única do PrismaClient
+│       ├── middlewares/auth.ts    # verificação do token JWT
+│       ├── routes/                # usuarios.ts, anuncios.ts, auth.ts
+│       └── schemas/               # validações com Zod
+└── frontend/
+    ├── public/                    # manifest.json, sw.js, ícones
+    └── src/
+        ├── components/            # Header, Hero, Stats, Vitrine, Footer
+        ├── pages/                 # Login, Cadastro, Anunciar, MeusAnuncios
+        ├── context/AuthContext.tsx
+        └── App.tsx
+```
+
+---
+
+## Como rodar o projeto localmente
+
+### Pré-requisitos
+- Node.js 18+
+- Uma conta no [Supabase](https://supabase.com) (ou outro Postgres acessível), para o banco de dados
+
+### 1. Clonar o repositório
+
+```bash
+git clone https://github.com/math109/desapego-universitario-v2.git
+cd desapego-universitario-v2
+```
+
+### 2. Configurar o Backend
+
+```bash
+cd backend
+npm install
+```
+
+Cria um arquivo `.env` na pasta `backend/` com as variáveis:
+
+```
+DATABASE_URL="postgresql://usuario:senha@host:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://usuario:senha@host:5432/postgres"
+JWT_SECRET="uma-frase-secreta-qualquer"
+```
+
+Cria as tabelas no banco:
+
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+Roda o servidor em modo de desenvolvimento:
+
+```bash
+npm run dev
+```
+
+O backend sobe em `http://localhost:3333`.
+
+### 3. Configurar o Frontend
+
+Em outro terminal:
+
+```bash
+cd frontend
+npm install
+```
+
+Cria um arquivo `.env` na pasta `frontend/` com:
+
+```
+VITE_API_URL=http://localhost:3333
+```
+
+Roda o servidor de desenvolvimento:
+
+```bash
+npm run dev
+```
+
+O frontend sobe em `http://localhost:5173`.
+
+> Observação: o registro do Service Worker (PWA) só ativa em build de produção (`npm run build` + `npm run preview`), não em `npm run dev` — isso é intencional, para evitar que o cache do Service Worker interfira no desenvolvimento.
+
+---
+
+## Funcionalidades
+
+- Landing page pública com vitrine de anúncios e filtro por categoria
+- Cadastro e login de usuários (JWT + senha criptografada com bcrypt)
+- Criar, listar, filtrar e excluir anúncios
+- Tela "Meus anúncios" (protegida por autenticação)
+- PWA instalável — testado e confirmado em dispositivo Android real, abrindo em tela cheia sem a barra de endereço do navegador
+- Funcionamento offline via Service Worker, com estratégia "rede primeiro, cache como reserva"
+- Validação de dados com mensagens de erro específicas por campo
+- Layout responsivo (desktop e mobile)
+
+---
+
+## Principais rotas da API
+
+| Método | Rota | Descrição | Requer login |
+|---|---|---|---|
+| POST | `/usuarios` | Cria um novo usuário | Não |
+| POST | `/auth/login` | Autentica e retorna um token JWT | Não |
+| GET | `/anuncios` | Lista anúncios, com filtro opcional por categoria | Não |
+| GET | `/anuncios/:id` | Busca um anúncio específico | Não |
+| POST | `/anuncios` | Cria um novo anúncio | Sim |
+| GET | `/anuncios/meus` | Lista os anúncios do usuário logado | Sim |
+| DELETE | `/anuncios/:id` | Remove um anúncio (só o dono pode) | Sim |
+
+---
+
+## 🤖 Diário de Bordo — Uso de Inteligência Artificial
+
+### Ferramentas utilizadas
+
+- **Gemini** — usado no início do projeto, como parceiro de arquitetura para decisão de stack tecnológica e geração dos comandos de inicialização (boilerplate) do Node.js, Prisma e Vite/React.
+- **Claude (Anthropic)** — usado ao longo de todo o restante do desenvolvimento: debugging, explicações conceituais, decisões de segurança, validação, PWA e resolução de problemas de deploy.
+
+### Estratégia de engenharia de prompts
+
+Alguns exemplos reais de prompts usados para destravar problemas durante o desenvolvimento:
+
+**1. Debug de configuração do banco de dados (Prisma 7 + Supabase):**
+> "estou criando um projeto que usa typescript e estou com um problema: [colei o erro completo do terminal] `Error: Prisma schema validation... The datasource property 'url' is no longer supported in schema files...`"
+
+Esse prompt, colando o erro literal do terminal, resolveu um erro real de migração de versão do Prisma — a v7 mudou a forma de configurar a conexão do banco, movendo-a do `schema.prisma` para o `prisma.config.ts` via adapter.
+
+**2. Pedido de explicação conceitual sobre autenticação:**
+> "explica de novo para mim como funciona a seguranca, a criacao do token, que verifica se o usuario esta logado ou nao, de onde vem, como funciona a verificacao de senha, a criptografia etc, explique bem direitinho"
+
+Esse prompt gerou uma explicação completa do fluxo de autenticação (hash de senha com bcrypt, geração e verificação de JWT, funcionamento do middleware de autenticação), essencial para eu entender de fato a lógica implementada, e não apenas copiar o código.
+
+**3. Esqueleto próprio, pedindo ajuda para melhorar (header responsivo com tema roxo):**
+> "estou fazendo um layout de aplicativo, me ajuda a melhorar esse esqueleto de header para esse projeto? tem que ser um layout com menu mobile já responsivo, quero um layout roxo"
+
+```tsx
+export function Header() {
+  return (
+    <header className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-[#2E1065] to-[#4C1D95]">
+      <div className="flex items-center gap-2">
+        <span className="text-xl font-bold text-[#F7F5FB]">Desapego</span>
+        <span className="text-[10px] font-mono uppercase tracking-widest text-[#C6F135]">
+          Campus · Unifor
+        </span>
+      </div>
+
+      <nav className="flex gap-6">
+        <a href="#como-funciona" className="text-[#A78BFA] hover:text-[#F7F5FB]">
+          Como funciona
+        </a>
+        <a href="#categorias" className="text-[#A78BFA] hover:text-[#F7F5FB]">
+          Categorias
+        </a>
+        <a href="#vitrine" className="text-[#A78BFA] hover:text-[#F7F5FB]">
+          Ver anúncios
+        </a>
+      </nav>
+
+      <div className="flex items-center gap-4">
+        <a href="/entrar" className="text-[#F7F5FB] opacity-85 hover:opacity-100">
+          Entrar
+        </a>
+        <a
+          href="/anunciar"
+          className="rounded-full bg-[#C6F135] px-5 py-2 text-sm font-semibold text-[#1C0F33] hover:-translate-y-0.5 transition-transform"
+        >
+          Anunciar item
+        </a>
+      </div>
+    </header>
+  );
+}
+```
+
+Esse prompt partiu de um esqueleto que eu mesmo montei, já com a paleta de cor definida, mas pedindo ajuda para transformá-lo num componente responsivo de verdade, com menu mobile — o resultado disso guiou toda a identidade visual do restante da landing page (roxo escuro `#2E1065`/`#4C1D95` com acento em verde-lima `#C6F135`).
+
+**4. Debug de erros de build em produção:**
+> "src/routes/anuncios.ts(72,64): error TS2322: Type 'string | string[] | undefined' is not assignable to type 'string | undefined'."
+
+Prompt usado durante o deploy no Render, quando configurações estritas do `tsconfig.json` (`verbatimModuleSyntax`, `exactOptionalPropertyTypes`) começaram a gerar erros de build que não apareciam em desenvolvimento local — levando à correção de tipagem de `req.params` e `req.query`.
+
+### Reflexão crítica
+
+Ao longo do projeto, tive vários momentos em que precisei revisar criticamente o código gerado, em vez de aceitá-lo diretamente:
+
+**Tags `<a>` incompletas (erro recorrente).** Em mais de uma ocasião, esqueletos de componentes React vieram com tags `<a>` sem a abertura `<a` — só os atributos soltos, o que quebraria a compilação do JSX. Identifiquei o padrão comparando com a estrutura esperada das outras tags, e como o erro se repetiu mais de uma vez, passei a revisar esse tipo de tag com mais atenção antes de aceitar qualquer código novo.
+
+**Configuração `noUncheckedIndexedAccess` do TypeScript.** Nas rotas de buscar/deletar anúncio por ID, o compilador reclamava de `req.params.id` como potencialmente `undefined`. Investigando, descobri que vinha da flag `noUncheckedIndexedAccess: true` no `tsconfig.json`. Em vez de simplesmente forçar o tipo, optei por validar explicitamente a presença do `id` antes de usá-lo, retornando um erro `400` claro — uma correção que reforçou a robustez da API, não só resolveu o aviso do compilador.
+
+**Merge de Git recuperando uma versão desatualizada silenciosamente.** Durante o processo de deploy do backend no Render, um conflito de merge foi resolvido inicialmente com `git pull --allow-unrelated-histories`, que gerou conflitos em `package.json` e `package-lock.json`. Ao resolver esses conflitos manualmente, uma versão anterior do arquivo `src/routes/anuncios.ts` (sem correções de tipagem já feitas) acabou sendo recuperada sem que isso fosse percebido de imediato — o que causou o mesmo erro de build reaparecer mais de uma vez, mesmo depois de supostamente corrigido. Identifiquei o problema comparando o conteúdo do arquivo local (`git show HEAD:...`) com o que estava no GitHub, e percebi que ambos estavam sincronizados, mas com a versão errada. A solução final foi recriar o repositório Git do zero, evitando depender de merges complexos entre históricos não relacionados. Esse episódio reforçou a importância de sempre conferir o conteúdo real de um arquivo após qualquer merge, em vez de assumir que "nothing to commit" significa que o conteúdo está correto.
+
+**Instalação real do PWA confirmada.** Depois de configurar o `manifest.json` e o Service Worker, testei a instalação em um dispositivo Android real: consegui instalar o app pela opção "Instalar aplicativo" do menu do Chrome, e ao abri-lo pelo ícone na tela inicial, ele abriu em tela cheia, sem a barra de endereço — confirmando que o requisito obrigatório de PWA instalável está funcionando de ponta a ponta.
+
+---
+
+## Autor
+
+Desenvolvido por Matheus Martins para o processo seletivo de estágio Full-Stack do Laboratório Vortex (UNIFOR) — 2026.
