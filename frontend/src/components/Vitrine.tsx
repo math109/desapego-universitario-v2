@@ -9,7 +9,7 @@ interface Anuncio {
   imagemUrl: string;
 }
  
-const CATEGORIAS = ["Todos", "Livros", "Engenharia", "Computação"];
+const CATEGORIAS = ["Todos", "Livros", "Engenharia", "Computação", "Saúde", "Arte", "Esportes", "Moda"];
  
 const API_URL = import.meta.env.VITE_API_URL;
  
