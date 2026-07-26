@@ -5,7 +5,7 @@ Marketplace de economia circular para o campus da UNIFOR. A plataforma permite q
 Projeto desenvolvido como desafio técnico do processo seletivo de estágio Full-Stack do Laboratório de Inovação Vortex (UNIFOR).
 
 🔗 **Aplicação em produção:** https://desapego-universitario-v2.vercel.app
-🔗 **API em produção:** https://desapego-universitario-cksr.onrender.com
+🔗 **API em produção:** https://desapego-universitario-cksr.onrender.com/anuncios
 
 > O backend está hospedado no plano gratuito do Render, que hiberna após um período de inatividade. A primeira requisição depois de um tempo sem uso pode levar de 30 a 60 segundos para responder.
 
