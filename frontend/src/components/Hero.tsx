@@ -5,7 +5,7 @@ export function Hero() {
         {/* Texto */}
         <div className="text-left">
           <span className="inline-block font-mono text-xs tracking-widest uppercase text-[#C6F135] mb-5">
-            Economia circular · Campus Unifor
+            Laboratótio Vortex · Campus Unifor
           </span>
           <h1 className="text-4xl md:text-5xl font-bold text-[#F7F5FB] leading-tight mb-6">
             Dê uma nova vida ao que você não usa mais
