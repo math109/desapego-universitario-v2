@@ -39,7 +39,7 @@ export function Header() {
           <div className="flex flex-col leading-none">
             <span className="text-xl font-bold text-[#F7F5FB]">Desapego</span>
             <span className="hidden sm:inline mt-1 text-[10px] font-mono uppercase tracking-widest text-[#C6F135]">
-              Campus · Unifor
+              Vortex · Unifor
             </span>
           </div>
         </a>
