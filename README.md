@@ -223,9 +223,6 @@ export function Header() {
 
 Esse prompt partiu de um esqueleto que eu mesmo montei, já com a paleta de cor definida, mas pedindo ajuda para transformá-lo num componente responsivo de verdade, com menu mobile — o resultado disso guiou toda a identidade visual do restante da landing page (roxo escuro `#2E1065`/`#4C1D95` com acento em verde-lima `#C6F135`).
 
-**4. Debug de erros de build em produção:**
-> "src/routes/anuncios.ts(72,64): error TS2322: Type 'string | string[] | undefined' is not assignable to type 'string | undefined'."
-
 Prompt usado durante o deploy no Render, quando configurações estritas do `tsconfig.json` (`verbatimModuleSyntax`, `exactOptionalPropertyTypes`) começaram a gerar erros de build que não apareciam em desenvolvimento local — levando à correção de tipagem de `req.params` e `req.query`.
 
 ### Reflexão crítica
