@@ -158,7 +158,7 @@ O frontend sobe em `http://localhost:5173`.
 
 ---
 
-## 🤖 Diário de Bordo — Uso de Inteligência Artificial
+## Diário de Bordo — Uso de Inteligência Artificial
 
 ### Ferramentas utilizadas
 
@@ -224,6 +224,10 @@ export function Header() {
 Esse prompt partiu de um esqueleto que eu mesmo montei, já com a paleta de cor definida, mas pedindo ajuda para transformá-lo num componente responsivo de verdade, com menu mobile — o resultado disso guiou toda a identidade visual do restante da landing page (roxo escuro `#2E1065`/`#4C1D95` com acento em verde-lima `#C6F135`).
 
 Prompt usado durante o deploy no Render, quando configurações estritas do `tsconfig.json` (`verbatimModuleSyntax`, `exactOptionalPropertyTypes`) começaram a gerar erros de build que não apareciam em desenvolvimento local — levando à correção de tipagem de `req.params` e `req.query`.
+
+### Chats Usados
+Layout : https://claude.ai/share/e9ff2ef9-58be-44c5-aee9-6ebf7978d50c
+Backend : https://claude.ai/share/866c336d-cb88-4a98-be27-93b45d549788
 
 ### Reflexão crítica
 
