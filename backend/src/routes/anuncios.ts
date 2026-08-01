@@ -29,7 +29,6 @@ router.post("/", authMiddleware, async (req: AuthRequest, res) => {
   }
 });
 
-// Listar anúncios (público, continua sem login)
 router.get("/", async (req, res) => {
   try {
     const { categoria } = req.query;
@@ -44,7 +43,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Meus anúncios (agora usa o token, não mais um ID na URL)
 router.get("/meus", authMiddleware, async (req: AuthRequest, res) => {
   try {
     const anuncios = await prisma.anuncio.findMany({
@@ -58,7 +56,6 @@ router.get("/meus", authMiddleware, async (req: AuthRequest, res) => {
   }
 });
 
-// Buscar um anúncio específico (público)
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -77,7 +74,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Deletar anúncio (agora exige login E ser o dono)
 router.delete("/:id", authMiddleware, async (req: AuthRequest, res) => {
   try {
     const { id } = req.params;
