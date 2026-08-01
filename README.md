@@ -158,7 +158,7 @@ O frontend sobe em `http://localhost:5173`.
 
 ---
 
-## 🤖 Diário de Bordo — Uso de Inteligência Artificial
+## Diário de Bordo — Uso de Inteligência Artificial
 
 ### Ferramentas utilizadas
 
@@ -180,8 +180,21 @@ Esse prompt, colando o erro literal do terminal, resolveu um erro real de migra�
 Esse prompt gerou uma explicação completa do fluxo de autenticação (hash de senha com bcrypt, geração e verificação de JWT, funcionamento do middleware de autenticação), essencial para eu entender de fato a lógica implementada, e não apenas copiar o código.
 
 **3. Esqueleto próprio, pedindo ajuda para melhorar (header responsivo com tema roxo):**
+Alguns exemplos reais de prompts usados para destravar problemas durante o desenvolvimento:
+ 
+**1. Debug de configuração do banco de dados (Prisma 7 + Supabase):**
+> "estou criando um projeto que usa typescript e estou com um problema: [colei o erro completo do terminal] `Error: Prisma schema validation... The datasource property 'url' is no longer supported in schema files...`"
+ 
+Esse prompt, colando o erro literal do terminal, resolveu um erro real de migração de versão do Prisma — a v7 mudou a forma de configurar a conexão do banco, movendo-a do `schema.prisma` para o `prisma.config.ts` via adapter.
+ 
+**2. Pedido de explicação conceitual sobre autenticação:**
+> "explica de novo para mim como funciona a seguranca, a criacao do token, que verifica se o usuario esta logado ou nao, de onde vem, como funciona a verificacao de senha, a criptografia etc, explique bem direitinho"
+ 
+Esse prompt gerou uma explicação completa do fluxo de autenticação (hash de senha com bcrypt, geração e verificação de JWT, funcionamento do middleware de autenticação), essencial para eu entender de fato a lógica implementada, e não apenas copiar o código.
+ 
+**3. Esqueleto próprio, pedindo ajuda para melhorar (header responsivo com tema roxo):**
 > "estou fazendo um layout de aplicativo, me ajuda a melhorar esse esqueleto de header para esse projeto? tem que ser um layout com menu mobile já responsivo, quero um layout roxo"
-
+ 
 ```tsx
 export function Header() {
   return (
@@ -192,7 +205,7 @@ export function Header() {
           Campus · Unifor
         </span>
       </div>
-
+ 
       <nav className="flex gap-6">
         <a href="#como-funciona" className="text-[#A78BFA] hover:text-[#F7F5FB]">
           Como funciona
@@ -204,7 +217,7 @@ export function Header() {
           Ver anúncios
         </a>
       </nav>
-
+ 
       <div className="flex items-center gap-4">
         <a href="/entrar" className="text-[#F7F5FB] opacity-85 hover:opacity-100">
           Entrar
@@ -220,25 +233,54 @@ export function Header() {
   );
 }
 ```
-
+ 
 Esse prompt partiu de um esqueleto que eu mesmo montei, já com a paleta de cor definida, mas pedindo ajuda para transformá-lo num componente responsivo de verdade, com menu mobile — o resultado disso guiou toda a identidade visual do restante da landing page (roxo escuro `#2E1065`/`#4C1D95` com acento em verde-lima `#C6F135`).
-
+ 
 **4. Debug de erros de build em produção:**
 > "src/routes/anuncios.ts(72,64): error TS2322: Type 'string | string[] | undefined' is not assignable to type 'string | undefined'."
-
+ 
 Prompt usado durante o deploy no Render, quando configurações estritas do `tsconfig.json` (`verbatimModuleSyntax`, `exactOptionalPropertyTypes`) começaram a gerar erros de build que não apareciam em desenvolvimento local — levando à correção de tipagem de `req.params` e `req.query`.
-
+ 
+### Chats usados
+ 
+- **Layout:** https://claude.ai/share/e9ff2ef9-58be-44c5-aee9-6ebf7978d50c
+- **Backend:** https://claude.ai/share/866c336d-cb88-4a98-be27-93b45d549788
 ### Reflexão crítica
-
+ 
 Ao longo do projeto, tive vários momentos em que precisei revisar criticamente o código gerado, em vez de aceitá-lo diretamente:
-
-**Tags `<a>` incompletas (erro recorrente).** Em mais de uma ocasião, esqueletos de componentes React vieram com tags `<a>` sem a abertura `<a` — só os atributos soltos, o que quebraria a compilação do JSX. Identifiquei o padrão comparando com a estrutura esperada das outras tags, e como o erro se repetiu mais de uma vez, passei a revisar esse tipo de tag com mais atenção antes de aceitar qualquer código novo.
-
-**Configuração `noUncheckedIndexedAccess` do TypeScript.** Nas rotas de buscar/deletar anúncio por ID, o compilador reclamava de `req.params.id` como potencialmente `undefined`. Investigando, descobri que vinha da flag `noUncheckedIndexedAccess: true` no `tsconfig.json`. Em vez de simplesmente forçar o tipo, optei por validar explicitamente a presença do `id` antes de usá-lo, retornando um erro `400` claro — uma correção que reforçou a robustez da API, não só resolveu o aviso do compilador.
-
-**Merge de Git recuperando uma versão desatualizada silenciosamente.** Durante o processo de deploy do backend no Render, um conflito de merge foi resolvido inicialmente com `git pull --allow-unrelated-histories`, que gerou conflitos em `package.json` e `package-lock.json`. Ao resolver esses conflitos manualmente, uma versão anterior do arquivo `src/routes/anuncios.ts` (sem correções de tipagem já feitas) acabou sendo recuperada sem que isso fosse percebido de imediato — o que causou o mesmo erro de build reaparecer mais de uma vez, mesmo depois de supostamente corrigido. Identifiquei o problema comparando o conteúdo do arquivo local (`git show HEAD:...`) com o que estava no GitHub, e percebi que ambos estavam sincronizados, mas com a versão errada. A solução final foi recriar o repositório Git do zero, evitando depender de merges complexos entre históricos não relacionados. Esse episódio reforçou a importância de sempre conferir o conteúdo real de um arquivo após qualquer merge, em vez de assumir que "nothing to commit" significa que o conteúdo está correto.
-
-**Instalação real do PWA confirmada.** Depois de configurar o `manifest.json` e o Service Worker, testei a instalação em um dispositivo Android real: consegui instalar o app pela opção "Instalar aplicativo" do menu do Chrome, e ao abri-lo pelo ícone na tela inicial, ele abriu em tela cheia, sem a barra de endereço — confirmando que o requisito obrigatório de PWA instalável está funcionando de ponta a ponta.
+ 
+**Tags `<a>` incompletas (erro recorrente).** Em mais de uma ocasião, a IA gerou esqueletos de componentes React com tags `<a>` sem a abertura `<a` — só os atributos soltos, o que quebraria a compilação do JSX. Identifiquei o padrão comparando com a estrutura esperada das outras tags, e como o erro se repetiu mais de uma vez nos códigos gerados, passei a revisar esse tipo de tag com mais atenção antes de aceitar qualquer sugestão nova.
+ 
+```tsx
+export function Hero() {
+  return (
+    <section className="text-center py-16 px-6 bg-green-50">
+      <h1 className="text-4xl font-bold text-gray-800 mb-4">
+        Dê uma nova vida ao que você não usa mais
+      </h1>
+      <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+        O Desapego Universitário conecta estudantes para doar ou vender livros,
+        calculadoras, jalecos e outros itens do campus — promovendo economia
+        circular e ajudando quem está começando a graduação.
+      </p>
+      <div className="flex gap-4 justify-center">
+        href="#vitrine"
+        className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700"
+        >
+          Buscar itens
+        </a>
+        href="/anunciar"
+        className="border border-green-600 text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-green-50"
+        >
+          Anunciar um item
+        </a>
+      </div>
+    </section>
+  );
+}
+```
+ 
+**Bloco try/catch malformado e hash duplicado na rota de cadastro.** Um trecho de backend gerado pela IA para criar usuários veio com um `try` externo sem seu próprio `catch`/`finally` — só o `try` interno tinha um —, o que deixava as chaves desencontradas e quebraria a compilação do TypeScript. Além disso, a IA duplicou a chamada `bcrypt.hash(senha, 10)`, hasheando a senha duas vezes à toa: uma vez fora do `try` interno, sem uso nenhum, e outra dentro dele. Percebi os dois problemas revisando a estrutura do código antes de aceitar — identifiquei que as chaves não fechavam corretamente e que havia uma variável recalculada sem necessidade — e corrigi juntando os dois blocos num único `try/catch` e removendo a chamada de hash redundante.
 
 ---
 
