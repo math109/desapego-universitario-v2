@@ -17,15 +17,17 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
   }
  
   
-  const token = authHeader.split(" ")[1];
- 
-  try {
-    if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET não configurado");
-    const payload = jwt.verify(token, JWT_SECRET) as unknown as { usuarioId: string };
-    req.usuarioId = payload.usuarioId;
- 
-    next();
-  } catch (err) {
-    return res.status(401).json({ erro: "Token inválido ou expirado." });
-  }
+const token = authHeader.split(" ")[1];
+
+if (!token) {
+  return res.status(401).json({ erro: "Token não informado." });
+}
+
+try {
+  const payload = jwt.verify(token, JWT_SECRET) as unknown as { usuarioId: string };
+  req.usuarioId = payload.usuarioId;
+  next();
+} catch (err) {
+  return res.status(401).json({ erro: "Token inválido ou expirado." });
+}
 }
