@@ -1,34 +1,34 @@
-import { Router } from "express";
+import { Router, Request } from "express";
 import { prisma } from "../lib/prisma";
-import { authMiddleware, AuthRequest } from "../middlewares/auth";
+import { authMiddleware } from "../middlewares/auth";
 import { criarAnuncioSchema } from "../schemas";
-
+ 
 const router = Router();
-
-router.post("/", authMiddleware, async (req: AuthRequest, res) => {
+ 
+router.post("/", authMiddleware, async (req: Request, res) => {
   const resultado = criarAnuncioSchema.safeParse(req.body);
-
+ 
   if (!resultado.success) {
     return res.status(400).json({
       erro: "Dados inválidos",
       detalhes: resultado.error.flatten().fieldErrors,
     });
   }
-
+ 
   const { titulo, descricao, categoria, preco, imagemUrl } = resultado.data;
-
+ 
   try {
     const anuncio = await prisma.anuncio.create({
       data: { titulo, descricao, categoria, preco, imagemUrl, usuarioId: req.usuarioId! },
     });
-
+ 
     return res.status(201).json(anuncio);
   } catch (error) {
     console.error("Erro ao criar anúncio:", error);
     return res.status(500).json({ erro: "Erro ao criar anúncio." });
   }
 });
-
+ 
 router.get("/", async (req, res) => {
   try {
     const { categoria } = req.query;
@@ -42,8 +42,8 @@ router.get("/", async (req, res) => {
     return res.status(500).json({ erro: "Erro ao listar anúncios." });
   }
 });
-
-router.get("/meus", authMiddleware, async (req: AuthRequest, res) => {
+ 
+router.get("/meus", authMiddleware, async (req: Request, res) => {
   try {
     const anuncios = await prisma.anuncio.findMany({
       where: { usuarioId: req.usuarioId! },
@@ -55,17 +55,17 @@ router.get("/meus", authMiddleware, async (req: AuthRequest, res) => {
     return res.status(500).json({ erro: "Erro ao listar seus anúncios." });
   }
 });
-
+ 
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-
+ 
     if (!id || Array.isArray(id)) {
       return res.status(400).json({ erro: "ID inválido." });
     }
-
+ 
     const anuncio = await prisma.anuncio.findUnique({ where: { id } });
-
+ 
     if (!anuncio) return res.status(404).json({ erro: "Anúncio não encontrado." });
     return res.json(anuncio);
   } catch (error) {
@@ -73,25 +73,25 @@ router.get("/:id", async (req, res) => {
     return res.status(500).json({ erro: "Erro ao buscar anúncio." });
   }
 });
-
-router.delete("/:id", authMiddleware, async (req: AuthRequest, res) => {
+ 
+router.delete("/:id", authMiddleware, async (req: Request, res) => {
   try {
     const { id } = req.params;
-
+ 
     if (!id || Array.isArray(id)) {
       return res.status(400).json({ erro: "ID inválido." });
     }
-
+ 
     const anuncio = await prisma.anuncio.findUnique({ where: { id } });
-
+ 
     if (!anuncio) {
       return res.status(404).json({ erro: "Anúncio não encontrado." });
     }
-
+ 
     if (anuncio.usuarioId !== req.usuarioId) {
       return res.status(403).json({ erro: "Você não tem permissão para deletar este anúncio." });
     }
-
+ 
     await prisma.anuncio.delete({ where: { id } });
     return res.status(204).send();
   } catch (error) {
@@ -99,5 +99,5 @@ router.delete("/:id", authMiddleware, async (req: AuthRequest, res) => {
     return res.status(500).json({ erro: "Erro ao deletar anúncio." });
   }
 });
-
+ 
 export default router;
