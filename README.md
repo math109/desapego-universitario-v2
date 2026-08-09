@@ -169,30 +169,7 @@ O frontend sobe em `http://localhost:5173`.
 
 Alguns exemplos reais de prompts usados para destravar problemas durante o desenvolvimento:
 
-**1. Debug de configuração do banco de dados (Prisma 7 + Supabase):**
-> "estou criando um projeto que usa typescript e estou com um problema: [colei o erro completo do terminal] `Error: Prisma schema validation... The datasource property 'url' is no longer supported in schema files...`"
-
-Esse prompt, colando o erro literal do terminal, resolveu um erro real de migração de versão do Prisma — a v7 mudou a forma de configurar a conexão do banco, movendo-a do `schema.prisma` para o `prisma.config.ts` via adapter.
-
-**2. Pedido de explicação conceitual sobre autenticação:**
-> "explica de novo para mim como funciona a seguranca, a criacao do token, que verifica se o usuario esta logado ou nao, de onde vem, como funciona a verificacao de senha, a criptografia etc, explique bem direitinho"
-
-Esse prompt gerou uma explicação completa do fluxo de autenticação (hash de senha com bcrypt, geração e verificação de JWT, funcionamento do middleware de autenticação), essencial para eu entender de fato a lógica implementada, e não apenas copiar o código.
-
-**3. Esqueleto próprio, pedindo ajuda para melhorar (header responsivo com tema roxo):**
-Alguns exemplos reais de prompts usados para destravar problemas durante o desenvolvimento:
- 
-**1. Debug de configuração do banco de dados (Prisma 7 + Supabase):**
-> "estou criando um projeto que usa typescript e estou com um problema: [colei o erro completo do terminal] `Error: Prisma schema validation... The datasource property 'url' is no longer supported in schema files...`"
- 
-Esse prompt, colando o erro literal do terminal, resolveu um erro real de migração de versão do Prisma — a v7 mudou a forma de configurar a conexão do banco, movendo-a do `schema.prisma` para o `prisma.config.ts` via adapter.
- 
-**2. Pedido de explicação conceitual sobre autenticação:**
-> "explica de novo para mim como funciona a seguranca, a criacao do token, que verifica se o usuario esta logado ou nao, de onde vem, como funciona a verificacao de senha, a criptografia etc, explique bem direitinho"
- 
-Esse prompt gerou uma explicação completa do fluxo de autenticação (hash de senha com bcrypt, geração e verificação de JWT, funcionamento do middleware de autenticação), essencial para eu entender de fato a lógica implementada, e não apenas copiar o código.
- 
-**3. Esqueleto próprio, pedindo ajuda para melhorar (header responsivo com tema roxo):**
+**1. Esqueleto próprio, pedindo ajuda para melhorar (header responsivo com tema roxo):**
 > "estou fazendo um layout de aplicativo, me ajuda a melhorar esse esqueleto de header para esse projeto? tem que ser um layout com menu mobile já responsivo, quero um layout roxo"
  
 ```tsx
@@ -236,10 +213,15 @@ export function Header() {
  
 Esse prompt partiu de um esqueleto que eu mesmo montei, já com a paleta de cor definida, mas pedindo ajuda para transformá-lo num componente responsivo de verdade, com menu mobile — o resultado disso guiou toda a identidade visual do restante da landing page (roxo escuro `#2E1065`/`#4C1D95` com acento em verde-lima `#C6F135`).
  
-**4. Debug de erros de build em produção:**
-> "src/routes/anuncios.ts(72,64): error TS2322: Type 'string | string[] | undefined' is not assignable to type 'string | undefined'."
+**2. Estruturação do Service Worker do PWA:**
+> "Estou fazendo o PWA do meu projeto e preciso estruturar o Service Worker. Já tenho um manifest.json configurado. Preciso que o Service Worker: faça cache das rotas essenciais na instalação, incluindo a raiz e o manifest; limpe versões antigas de cache na ativação, pra não ficar acumulando cache de deploys anteriores; use uma estratégia de 'rede primeiro, cache como reserva' nas requisições — sempre tenta buscar da internet primeiro, e só cai pro cache se a rede falhar; no caso de navegação entre páginas offline (não arquivos como JS/CSS), tenha um fallback pra página inicial. Pode estruturar isso pra mim, explicando cada evento?"
  
-Prompt usado durante o deploy no Render, quando configurações estritas do `tsconfig.json` (`verbatimModuleSyntax`, `exactOptionalPropertyTypes`) começaram a gerar erros de build que não apareciam em desenvolvimento local — levando à correção de tipagem de `req.params` e `req.query`.
+Esse prompt gerou a estrutura completa do `sw.js`, cobrindo os três eventos do ciclo de vida do Service Worker (`install`, `activate`, `fetch`) e a estratégia de cache usada no projeto.
+ 
+**3. Arquitetura de proteção de rotas com middleware de autenticação:**
+> "Tenho rotas de anúncios num backend Express e TypeScript, e algumas delas só podem ser acessadas por usuários logados (criar anúncio, listar meus anúncios, deletar), enquanto outras precisam continuar públicas (listar todos, buscar por ID). Como estruturar um middleware de autenticação que valide um token JWT no header, extraia o ID do usuário de dentro do token, e proteja só as rotas específicas — deixando as outras sem essa exigência? Preciso que, se o token faltar ou for inválido, a rota nem rode."
+ 
+Esse prompt resultou no `authMiddleware`, que confere a assinatura do token JWT e injeta o ID do usuário na requisição antes de liberar a passagem pra rota protegida — usado seletivamente só nas rotas que exigem login.
  
 ### Chats usados
  
