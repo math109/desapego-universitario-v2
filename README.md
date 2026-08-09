@@ -225,8 +225,8 @@ Esse prompt resultou no `authMiddleware`, que confere a assinatura do token JWT 
  
 ### Chats usados
  
-- **Layout:** https://claude.ai/share/e9ff2ef9-58be-44c5-aee9-6ebf7978d50c
-- **Backend:** https://claude.ai/share/866c336d-cb88-4a98-be27-93b45d549788
+- **Frontend e BackEnd:** https://claude.ai/share/e9ff2ef9-58be-44c5-aee9-6ebf7978d50c
+- **Esqueleto e Ritmo do Projeto:** https://claude.ai/share/866c336d-cb88-4a98-be27-93b45d549788
 ### Reflexão crítica
  
 Ao longo do projeto, tive vários momentos em que precisei revisar criticamente o código gerado, em vez de aceitá-lo diretamente:
